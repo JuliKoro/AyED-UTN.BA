@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1572647572 source:c:\users\julia\utn\algoritmos y estructuras de datos\ejercicios\clase16e3\main.cpp
+	<iostream>
+	<string>
+	<stdio.h>
+	<cstring>
+

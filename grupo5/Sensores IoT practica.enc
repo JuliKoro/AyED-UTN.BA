@@ -1,0 +1,136 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+
+struct Medicion { //sublista
+	int horaSub;
+	int id;
+	float valor;
+	Medicion* prox;
+};
+
+
+struct NodoHora { //lista principal
+	int hora;
+	Medicion* sublista;
+	NodoHora* sig;
+};
+
+
+/*NodoHora* insertarOrdenado(Nodo*& p, int v) {
+    Nodo* nuevo = new Nodo();
+	nuevo->info = v;
+    nuevo->sig = NULL;
+    Nodo* ant = NULL;
+    Nodo* aux = p;
+	while(aux!=NULL && aux->info<=v) {
+		    ant = aux;
+		    aux = aux->sig;
+		    }
+		    if(ant==NULL) {
+			    p = nuevo;
+			    } else { 
+				ant->sig = nuevo;
+		        } 
+	nuevo->sig = aux;
+	return nuevo;
+}*/
+
+
+void agregarNodoPrincipal(NodoHora*& p, Medicion*& x, int etc) { 
+	NodoHora* nuevo = new NodoHora(); //creo el nodo principal
+	nuevo->hora = etc;
+	nuevo->sublista = x ; //le asigno una sublista 
+	nuevo->sig = NULL;
+	if( p==NULL ) {
+		p = nuevo;
+		} else {
+		NodoHora* aux = p;
+		while(aux->sig!=NULL) {
+			aux = aux->sig;
+		}
+		aux->sig = nuevo;
+		} 
+}
+
+
+
+void agregarNodoSecundario(NodoHora*& p, Medicion*& x, Medicion etc) { 
+	Medicion* nuevo = new Medicion();
+	nuevo->id = etc.id;
+	nuevo->valor = etc.valor;
+	nuevo->prox = NULL;
+	if( x==NULL ) {
+		x = nuevo;
+		p->sublista = x;
+		} else {
+		Medicion* aux = x;
+		while(aux->prox!=NULL) {
+			aux = aux->prox;
+		}
+		aux->prox = nuevo;
+		p->sublista = aux->prox;
+		} 
+}
+
+
+void CrearListaPrincipal (NodoHora*& p, Medicion*& x){
+	int horario = 1;
+	while (horario <= 24){
+		agregarNodoPrincipal (p, x, horario);
+		horario++;
+	}
+}
+
+
+void CrearListaSecundaria (NodoHora*& p, Medicion*& x){
+	Medicion aux;
+	FILE*f;
+	f=fopen ("mediciones.csv","rt");
+	fread (&aux,sizeof(Medicion),1,f);
+	while(!feof(f)){
+		while (p->sig == NULL){	
+			if(p->hora == aux.horaSub){
+				agregarNodoSecundario(p,x, aux);
+			}
+			else{
+				
+			}
+		}
+	}
+}
+
+
+void leer(NodoHora*& p,Medicion*& x){
+	CrearListaPrincipal (p, x);
+	CrearListaSecundaria (p, x);
+}
+ 
+
+void Mostrar (Medicion aux){
+	cout<<"Hora: "<<aux.horaSub<<" Id: "<<aux.id<<" Medicion: "<<aux.valor<<endl;
+}
+
+
+void CargarMostrar(NodoHora*& p, Medicion*& x){
+	Medicion aux;
+	while (p->sig == NULL){
+		while (x->prox == NULL){
+			aux.horaSub=p->hora;
+			aux.id=x->id;
+			aux.valor=x->valor;
+			Mostrar (aux);
+			x=x->prox;
+		}
+		p=p->sig;
+	}
+}
+
+
+int main (){
+	NodoHora* p = new NodoHora();
+	Medicion* x = new Medicion();
+	leer (p,x);
+	CargarMostrar (p,x);
+}

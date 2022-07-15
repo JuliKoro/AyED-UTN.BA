@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1572030341 source:c:\users\julia\utn\algoritmos y estructuras de datos\ejercicios\calse15e2\main.cpp
+	<iostream>
+	<string>
+	<stdio.h>
+
